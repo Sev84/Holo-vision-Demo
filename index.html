@@ -265,25 +265,28 @@
 
     <script>
         const islevKartlari = [
-            { id: 1, islevAdi: "Otobüs Durağı", aciklama: "Güvenli rota kartı. Otobüs duraklarını temsil eder ve yaklaşıldığında sesli uyarı verir.", gorselURL: "DURAK.png", qrGorselURL: "Otobüs Durağı.png", sesURL: "Otobüs Durağı.mp3", icon: "ph-bus", hovercodeURL: "https://scanqr.to/bb21e661" },
-            { id: 2, islevAdi: "Hastane Alanı", aciklama: "Güvenli rota kartı. Hastanelerin giriş ve acil servis bölgelerini belirtir.", gorselURL: "HASTANE.png", qrGorselURL: "Hastane Alanı.png", sesURL: "Hastane Alanı.mp3", icon: "ph-first-aid-kit", hovercodeURL: "https://scanqr.to/a09a589f" },
-            { id: 3, islevAdi: "Okul Alanı", aciklama: "Güvenli rota kartı. Okul çevreleri ve yaya geçitleri için bilgilendirme yapar.", gorselURL: "OKUL.png", qrGorselURL: "Okul Alanı.png", sesURL: "Okul Alanı.mp3", icon: "ph-student", hovercodeURL: "https://scanqr.to/49c2c4f6" },
-            { id: 4, islevAdi: "Park Alanı", aciklama: "Güvenli rota kartı. Park ve dinlenme alanlarının girişlerini belirtir.", gorselURL: "PARK.png", qrGorselURL: "Park Alanı.png", sesURL: "Park Alanı.mp3", icon: "ph-tree", hovercodeURL: "https://scanqr.to/50366d18" },
-            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı. AVM ve yoğun ticari bölgeler için bilgilendirme yapar.", gorselURL: "TİCARİ.png", qrGorselURL: "Ticari Alan.png", sesURL: "Ticari Alan.mp3", icon: "ph-shopping-cart-simple", hovercodeURL: "https://scanqr.to/473fbabe" }
+            { id: 1, islevAdi: "Otobüs Durağı", aciklama: "Güvenli rota kartı. Otobüs duraklarını temsil eder ve yaklaşıldığında sesli uyarı verir.", gorselURL: "DURAK.png", qrGorselURL: "Otobüs Durağı.png", sesDosyasi: "Otobüs Durağı.mp3", icon: "ph-bus", hovercodeURL: "https://scanqr.to/bb21e661" },
+            { id: 2, islevAdi: "Hastane Alanı", aciklama: "Güvenli rota kartı. Hastanelerin giriş ve acil servis bölgelerini belirtir.", gorselURL: "HASTANE.png", qrGorselURL: "Hastane Alanı.png", sesDosyasi: "Hastane Alanı.mp3", icon: "ph-first-aid-kit", hovercodeURL: "https://scanqr.to/a09a589f" },
+            { id: 3, islevAdi: "Okul Alanı", aciklama: "Güvenli rota kartı. Okul çevreleri ve yaya geçitleri için bilgilendirme yapar.", gorselURL: "OKUL.png", qrGorselURL: "Okul Alanı.png", sesDosyasi: "Okul Alanı.mp3", icon: "ph-student", hovercodeURL: "https://scanqr.to/49c2c4f6" },
+            { id: 4, islevAdi: "Park Alanı", aciklama: "Güvenli rota kartı. Park ve dinlenme alanlarının girişlerini belirtir.", gorselURL: "PARK.png", qrGorselURL: "Park Alanı.png", sesDosyasi: "Park Alanı.mp3", icon: "ph-tree", hovercodeURL: "https://scanqr.to/50366d18" },
+            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı. AVM ve yoğun ticari bölgeler için bilgilendirme yapar.", gorselURL: "TİCARİ.png", qrGorselURL: "Ticari Alan.png", sesDosyasi: "Ticari Alan.mp3", icon: "ph-shopping-cart-simple", hovercodeURL: "https://scanqr.to/473fbabe" }
         ];
 
+        // YENİ: İsteğinize göre düzenlenen renk ve ses eşleşmeleri
         const renkEslesmeleri = [
-            { name: "Tehlike", hex: "#FF0000", r: 255, g: 0, b: 0, icon: "ph-warning-octagon-fill", sesURL: "https://cdn.pixabay.com/audio/2022/03/15/audio_2c737596e1.mp3" },
-            { name: "Uyarı", hex: "#FFFF00", r: 255, g: 255, b: 0, icon: "ph-warning-fill", sesURL: "https://cdn.pixabay.com/audio/2021/08/04/audio_a52f9f5363.mp3" },
-            { name: "Güvenli", hex: "#00FF00", r: 0, g: 255, b: 0, icon: "ph-check-circle-fill", sesURL: "https://cdn.pixabay.com/audio/2022/03/10/audio_a6a08c1243.mp3" },
-            { name: "Bilgi", hex: "#0000FF", r: 0, g: 0, b: 255, icon: "ph-info-fill", sesURL: "https://cdn.pixabay.com/audio/2022/11/21/audio_a1bd0b7a37.mp3" }
+            // DİKKAT: Kendi ses dosyalarınızı bir sunucuya yükleyip bu URL'leri değiştirmeniz gerekmektedir.
+            { name: "Okul Alanı", hex: "#FFA500", r: 255, g: 165, b: 0, icon: "ph-student", sesURL: "https://cdn.pixabay.com/audio/2022/11/21/audio_a1bd0b7a37.mp3" }, // Turuncu
+            { name: "Park Alanı", hex: "#800080", r: 128, g: 0, b: 128, icon: "ph-tree", sesURL: "https://cdn.pixabay.com/audio/2022/03/10/audio_a6a08c1243.mp3" }, // Mor
+            { name: "Hastane Alanı", hex: "#40E0D0", r: 64, g: 224, b: 208, icon: "ph-first-aid-kit", sesURL: "https://cdn.pixabay.com/audio/2021/08/04/audio_a52f9f5363.mp3" }, // Turkuaz
+            { name: "Ticari Alan", hex: "#FFFF00", r: 255, g: 255, b: 0, icon: "ph-shopping-cart-simple", sesURL: "https://cdn.pixabay.com/audio/2022/03/15/audio_2c737596e1.mp3" }, // Sarı
+            { name: "Otobüs Durağı", hex: "#008000", r: 0, g: 128, b: 0, icon: "ph-bus", sesURL: "https://cdn.pixabay.com/audio/2022/02/15/audio_5893006a84.mp3" } // Yeşil
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
             initWelcomeModal();
             initAccessibility();
             kartlariOlustur();
-            initCameraColorPicker(); // Renk tanıma fonksiyonunu çağır
+            initCameraColorPicker(); 
             dinamikQrKodlariOlustur();
             initStatsDashboard();
         });
@@ -294,7 +297,7 @@
             const skipBtn = document.getElementById('skip-modal-btn');
             const instructionAudio = document.getElementById('voice-instruction');
 
-            if (!welcomeModal || !modalContent || !skipBtn || !instructionAudio) return;
+            if (!welcomeModal || !modalContent || !skipBtn) return;
 
             setTimeout(() => {
                 welcomeModal.classList.add('opacity-100');
@@ -303,7 +306,7 @@
             }, 500);
 
             const closeModal = () => {
-                if (instructionAudio.duration > 0 && !instructionAudio.paused) {
+                if (instructionAudio && instructionAudio.duration > 0 && !instructionAudio.paused) {
                     instructionAudio.pause();
                     instructionAudio.currentTime = 0;
                 }
@@ -402,7 +405,6 @@
             });
         }
 
-        // DÜZELTİLMİŞ: Kamera ile renk tanıma, eşleştirme ve sesli uyarı fonksiyonu
         function initCameraColorPicker() {
             const video = document.getElementById('camera-feed');
             const canvas = document.getElementById('snapshot-canvas');
@@ -446,7 +448,6 @@
                 const centerX = Math.floor(canvas.width / 2);
                 const centerY = Math.floor(canvas.height / 2);
                 
-                // DÜZELTME: Daha kararlı tanıma için 10x10'luk bir alanın ortalamasını al
                 const sampleSize = 10;
                 const imageData = context.getImageData(centerX - (sampleSize/2), centerY - (sampleSize/2), sampleSize, sampleSize).data;
                 
@@ -475,7 +476,6 @@
                     matchedColorIcon.className = `ph ${matchedColor.icon} text-4xl text-black`;
                     
                     if (lastMatchedColorName !== matchedColor.name) {
-                        console.log(`Yeni renk eşleşti: ${matchedColor.name}. Ses çalınıyor: ${matchedColor.sesURL}`);
                         lastMatchedColorName = matchedColor.name;
                         matchAudio.src = matchedColor.sesURL;
                         matchAudio.play().catch(e => console.error("Ses dosyası oynatılamadı:", e));
