@@ -10,6 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- QR Kod Okuyucu Kütüphanesi -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 
     <style>
         body {
@@ -26,14 +28,6 @@
         .card-hover-effect:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
-        }
-        audio::-webkit-media-controls-panel {
-            background-color: #374151;
-        }
-        audio::-webkit-media-controls-play-button,
-        audio::-webkit-media-controls-mute-button {
-            background-color: #9CA3AF;
-            border-radius: 50%;
         }
         .info-card {
             background-color: rgba(31, 41, 55, 0.8);
@@ -87,7 +81,6 @@
 
     <div class="container mx-auto p-4 md:p-8">
 
-        <!-- GİRİŞ EKRANI BÖLÜMÜ -->
         <header id="hero-section" class="text-center py-16">
             <div class="flex justify-center mb-8">
                 <img src="logo111111.png" alt="HOLO-VISION Logosu" class="h-28 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/200x100/111827/FFFFFF?text=Logo';">
@@ -95,7 +88,6 @@
             <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4">HOLO-VISION</h1>
             <p class="text-xl text-gray-300 max-w-3xl mx-auto">Engelsiz kentler için teknolojiyi adımlarınıza taşıyoruz.</p>
             
-            <!-- Bilgilendirme Kartları (İnfografikler) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 max-w-6xl mx-auto">
                 <div class="info-card rounded-xl p-6 text-center card-hover-effect">
                     <i class="ph-bold ph-person-simple-walk text-5xl text-red-500 mx-auto mb-4"></i>
@@ -128,7 +120,6 @@
 
         <main class="space-y-16">
             
-            <!-- İstatistik Paneli Bölümü -->
             <section id="stats-section" aria-labelledby="stats-heading">
                 <h2 id="stats-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Canlı İstatistik Paneli</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -136,14 +127,14 @@
                         <i class="ph-bold ph-qr-code text-4xl text-green-400"></i>
                         <div>
                             <p class="text-sm text-gray-400">Toplam Tarama</p>
-                            <p class="text-3xl font-bold text-white" id="total-scans"></p>
+                            <p class="text-3xl font-bold text-white" id="total-scans">0</p>
                         </div>
                     </div>
                     <div class="info-card rounded-xl p-6 flex items-center gap-4">
                         <i class="ph-bold ph-users text-4xl text-indigo-400"></i>
                         <div>
                             <p class="text-sm text-gray-400">Toplam Ziyaretçi</p>
-                            <p class="text-3xl font-bold text-white" id="total-visitors"></p>
+                            <p class="text-3xl font-bold text-white" id="total-visitors">0</p>
                         </div>
                     </div>
                     <div class="info-card rounded-xl p-6 flex items-center gap-4">
@@ -168,27 +159,22 @@
                 </div>
             </section>
 
-            <!-- DÜZELTİLMİŞ: Canlı Renk Tanıma Bölümü -->
             <section id="camera-color-picker-section" aria-labelledby="camera-heading">
                 <h2 id="camera-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Canlı Renk Tanıma</h2>
                 <div class="info-card rounded-xl p-6">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                        <!-- Kamera Görüntüsü -->
                         <div class="relative w-full max-w-md mx-auto aspect-video bg-gray-900 rounded-lg overflow-hidden border border-gray-700">
                             <video id="camera-feed" class="w-full h-full object-cover" autoplay playsinline></video>
                             <div id="crosshair" class="absolute top-1/2 left-1/2 w-6 h-6 -translate-x-1/2 -translate-y-1/2 border-2 border-red-500 rounded-full pointer-events-none" style="display: none;"></div>
                             <canvas id="snapshot-canvas" class="hidden"></canvas>
                         </div>
-                        <!-- Renk Bilgisi ve Kontroller -->
                         <div>
                             <div class="flex flex-row items-start justify-center gap-4 sm:gap-8 mb-6">
-                                <!-- Algılanan Renk Sütunu -->
                                 <div class="text-center flex-1">
                                     <p class="text-gray-400 mb-2">Algılanan Renk</p>
                                     <div id="color-preview" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-gray-600 shadow-lg transition-colors duration-200 mx-auto" style="background-color: #000;"></div>
                                     <p id="color-value" class="text-lg sm:text-xl font-bold text-white font-mono tracking-widest mt-2">#000000</p>
                                 </div>
-                                <!-- Eşleşen Renk Sütunu -->
                                 <div class="text-center flex-1">
                                     <p class="text-gray-400 mb-2">Eşleşen Alan</p>
                                     <div id="matched-color-preview" class="w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-gray-600 shadow-lg transition-colors duration-200 mx-auto flex items-center justify-center" style="background-color: #000;">
@@ -209,7 +195,6 @@
                 </div>
             </section>
 
-            <!-- Google Maps Entegrasyonu -->
             <section id="map-section" aria-labelledby="map-heading">
                 <h2 id="map-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">İşlev Alanları Haritası</h2>
                 <div class="info-card rounded-xl p-2 shadow-lg h-96">
@@ -226,7 +211,6 @@
                 </div>
             </section>
 
-            <!-- Diğer Bölümler... -->
             <section id="functions-section" aria-labelledby="functions-heading">
                 <h2 id="functions-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Proje İşlevleri ve Sesli Bilgilendirme</h2>
                 <div id="islevKonteyneri" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -234,7 +218,30 @@
 
             <section id="dynamic-qr-section" aria-labelledby="qr-heading">
                 <h2 id="qr-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Dinamik QR Kod Yönetimi</h2>
-                <div id="dinamikQrKonteyneri" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+                <div class="info-card rounded-xl p-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                        <div class="relative w-full max-w-md mx-auto aspect-square bg-gray-900 rounded-lg overflow-hidden border border-gray-700">
+                            <video id="qr-camera-feed" class="w-full h-full object-cover" autoplay playsinline></video>
+                             <div id="qr-line" class="absolute top-1/2 left-0 w-full h-1 bg-red-500/50 shadow-lg" style="display: none;"></div>
+                            <canvas id="qr-snapshot-canvas" class="hidden"></canvas>
+                        </div>
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold mb-4">QR Kodu Tara veya Yükle</h3>
+                            <div class="flex justify-center gap-4 mb-4">
+                                <button id="start-qr-camera-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Kamerayı Aç</button>
+                                <label for="qr-file-input" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer">
+                                    Dosya Yükle
+                                </label>
+                                <input type="file" id="qr-file-input" class="hidden" accept="image/*">
+                            </div>
+                            <div class="mt-4 p-4 bg-gray-900/50 rounded-lg min-h-[6rem]">
+                                <p class="text-gray-400">Okunan Veri:</p>
+                                <p id="qr-result" class="text-lg text-green-400 font-mono break-all">-</p>
+                            </div>
+                            <p id="qr-camera-error" class="text-red-500 text-center mt-2 hidden"></p>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section id="qrcards-section" aria-labelledby="qrcards-heading">
@@ -266,19 +273,19 @@
 
     <script>
         const islevKartlari = [
-            { id: 1, islevAdi: "Otobüs Durağı", aciklama: "Güvenli rota kartı. Otobüs duraklarını temsil eder ve yaklaşıldığında sesli uyarı verir.", gorselURL: "DURAK.png", qrGorselURL: "Otobüs Durağı.png", sesDosyasi: "Otobüs Durağı.mp3", icon: "ph-bus", hovercodeURL: "https://scanqr.to/bb21e661" },
-            { id: 2, islevAdi: "Hastane Alanı", aciklama: "Güvenli rota kartı. Hastanelerin giriş ve acil servis bölgelerini belirtir.", gorselURL: "HASTANE.png", qrGorselURL: "Hastane Alanı.png", sesDosyasi: "Hastane Alanı.mp3", icon: "ph-first-aid-kit", hovercodeURL: "https://scanqr.to/a09a589f" },
-            { id: 3, islevAdi: "Okul Alanı", aciklama: "Güvenli rota kartı. Okul çevreleri ve yaya geçitleri için bilgilendirme yapar.", gorselURL: "OKUL.png", qrGorselURL: "Okul Alanı.png", sesDosyasi: "Okul Alanı.mp3", icon: "ph-student", hovercodeURL: "https://scanqr.to/49c2c4f6" },
-            { id: 4, islevAdi: "Park Alanı", aciklama: "Güvenli rota kartı. Park ve dinlenme alanlarının girişlerini belirtir.", gorselURL: "PARK.png", qrGorselURL: "Park Alanı.png", sesDosyasi: "Park Alanı.mp3", icon: "ph-tree", hovercodeURL: "https://scanqr.to/50366d18" },
-            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı. AVM ve yoğun ticari bölgeler için bilgilendirme yapar.", gorselURL: "TİCARİ.png", qrGorselURL: "Ticari Alanı.png", sesDosyasi: "Ticari Alanı.mp3", icon: "ph-shopping-cart-simple", hovercodeURL: "https://scanqr.to/473fbabe" }
+            { id: 1, islevAdi: "Otobüs Durağı", aciklama: "Güvenli rota kartı...", gorselURL: "DURAK.png", sesURL: "https://sev84.github.io/Holo-vision-Demo/Otob%C3%BCs%20Dura%C4%9F%C4%B1.mp3", icon: "ph-bus" },
+            { id: 2, islevAdi: "Hastane Alanı", aciklama: "Güvenli rota kartı...", gorselURL: "HASTANE.png", sesURL: "https://sev84.github.io/Holo-vision-Demo/Hastane%20Alan%C4%B1.mp3", icon: "ph-first-aid-kit" },
+            { id: 3, islevAdi: "Okul Alanı", aciklama: "Güvenli rota kartı...", gorselURL: "OKUL.png", sesURL: "https://sev84.github.io/Holo-vision-Demo/Okul%20Alan%C4%B1.mp3", icon: "ph-student" },
+            { id: 4, islevAdi: "Park Alanı", aciklama: "Güvenli rota kartı...", gorselURL: "PARK.png", sesURL: "https://sev84.github.io/Holo-vision-Demo/Park%20Alan%C4%B1.mp3", icon: "ph-tree" },
+            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı...", gorselURL: "TİCARİ.png", sesURL: "https://sev84.github.io/Holo-vision-Demo/Ticari%20Alan.mp3", icon: "ph-shopping-cart-simple" }
         ];
 
         const renkEslesmeleri = [
-            { name: "Okul Alanı", hex: "#FFA500", r: 255, g: 165, b: 0, icon: "ph-student", sesURL: "https://sev84.github.io/Holo-vision-Demo/Okul%20Alan%C4%B1.mp3" }, // Turuncu
-            { name: "Park Alanı", hex: "#800080", r: 128, g: 0, b: 128, icon: "ph-tree", sesURL: "https://sev84.github.io/Holo-vision-Demo/Park%20Alan%C4%B1.mp3" }, // Mor
-            { name: "Hastane Alanı", hex: "#40E0D0", r: 64, g: 224, b: 208, icon: "ph-first-aid-kit", sesURL: "https://sev84.github.io/Holo-vision-Demo/Hastane%20Alan%C4%B1.mp3" }, // Turkuaz
-            { name: "Ticari Alan", hex: "#FFFF00", r: 255, g: 255, b: 0, icon: "ph-shopping-cart-simple", sesURL: "https://sev84.github.io/Holo-vision-Demo/Ticari%20Alan.mp3" }, // Sarı
-            { name: "Otobüs Durağı", hex: "#008000", r: 0, g: 128, b: 0, icon: "ph-bus", sesURL: "https://sev84.github.io/Holo-vision-Demo/Otob%C3%BCs%20Dura%C4%9F%C4%B1.mp3" } // Yeşil
+            { name: "Okul Alanı", hex: "#FFA500", r: 255, g: 165, b: 0, icon: "ph-student", sesURL: "https://sev84.github.io/Holo-vision-Demo/Okul%20Alan%C4%B1.mp3" },
+            { name: "Park Alanı", hex: "#800080", r: 128, g: 0, b: 128, icon: "ph-tree", sesURL: "https://sev84.github.io/Holo-vision-Demo/Park%20Alan%C4%B1.mp3" },
+            { name: "Hastane Alanı", hex: "#40E0D0", r: 64, g: 224, b: 208, icon: "ph-first-aid-kit", sesURL: "https://sev84.github.io/Holo-vision-Demo/Hastane%20Alan%C4%B1.mp3" },
+            { name: "Ticari Alan", hex: "#FFFF00", r: 255, g: 255, b: 0, icon: "ph-shopping-cart-simple", sesURL: "https://sev84.github.io/Holo-vision-Demo/Ticari%20Alan.mp3" },
+            { name: "Otobüs Durağı", hex: "#008000", r: 0, g: 128, b: 0, icon: "ph-bus", sesURL: "https://sev84.github.io/Holo-vision-Demo/Otob%C3%BCs%20Dura%C4%9F%C4%B1.mp3" }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -286,7 +293,7 @@
             initAccessibility();
             kartlariOlustur();
             initCameraColorPicker(); 
-            dinamikQrKodlariOlustur();
+            initQrScanner();
             initStatsDashboard();
         });
 
@@ -394,6 +401,7 @@
             const konteyner = document.getElementById('islevKonteyneri');
             if (!konteyner) return;
             konteyner.innerHTML = ''; 
+            const audioPlayer = new Audio();
 
             islevKartlari.forEach(kart => {
                 const islevKarti = document.createElement('div');
@@ -410,12 +418,25 @@
                         <p class="text-gray-400 text-sm mb-4 flex-grow">${kart.aciklama}</p>
                     </div>
                 `;
+                
+                islevKarti.addEventListener('mouseenter', () => {
+                    if (audioPlayer.src !== kart.sesURL) {
+                        audioPlayer.src = kart.sesURL;
+                    }
+                    audioPlayer.play().catch(e => console.error("Kart sesi çalınamadı:", e));
+                });
+
+                islevKarti.addEventListener('mouseleave', () => {
+                    audioPlayer.pause();
+                    audioPlayer.currentTime = 0;
+                });
+
                 konteyner.appendChild(islevKarti);
             });
         }
 
         function initCameraColorPicker() {
-            const video = document.getElementById('camera-feed');
+             const video = document.getElementById('camera-feed');
             const canvas = document.getElementById('snapshot-canvas');
             const colorPreview = document.getElementById('color-preview');
             const colorValue = document.getElementById('color-value');
@@ -442,7 +463,7 @@
                         closestMatch.color = color;
                     }
                 }
-                const threshold = 180; 
+                const threshold = 200; 
                 return closestMatch.distance < threshold ? closestMatch : { color: null, distance: Infinity };
             };
 
@@ -480,7 +501,7 @@
                 const { color: matchedColor, distance } = findClosestColor(r, g, b);
 
                 if (matchedColor) {
-                    const percentage = Math.round(Math.max(0, (1 - (distance / 180)) * 100));
+                    const percentage = Math.round(Math.max(0, (1 - (distance / 200)) * 100));
                     matchedColorPreview.style.backgroundColor = matchedColor.hex;
                     matchedColorName.textContent = matchedColor.name;
                     matchedColorIcon.className = `ph ${matchedColor.icon} text-4xl text-black`;
@@ -489,7 +510,6 @@
                     if (lastMatchedColorName !== matchedColor.name) {
                         lastMatchedColorName = matchedColor.name;
                         
-                        // Sesi çalmadan önce mevcut sesi durdur
                         if (!matchAudio.paused) {
                             matchAudio.pause();
                             matchAudio.currentTime = 0;
@@ -498,7 +518,7 @@
                         matchAudio.src = matchedColor.sesURL;
                         matchAudio.play().catch(e => {
                             if (e.name !== 'AbortError') {
-                                console.error("Ses dosyası oynatılamadı:", e);
+                                console.error("Renk eşleşme sesi oynatılamadı:", e);
                             }
                         });
                     }
@@ -523,7 +543,7 @@
                         startBtn.classList.replace('bg-green-600', 'bg-red-600');
                         startBtn.classList.replace('hover:bg-green-700', 'hover:bg-red-700');
                         crosshair.style.display = 'block';
-                        intervalId = setInterval(processFrame, 250); // Tarama aralığını biraz artırarak performansı iyileştir
+                        intervalId = setInterval(processFrame, 250);
                     };
                 } catch (err) {
                     console.error("Kamera erişim hatası:", err);
@@ -563,24 +583,99 @@
             });
         }
 
+        function initQrScanner() {
+            const video = document.getElementById('qr-camera-feed');
+            const canvas = document.getElementById('qr-snapshot-canvas');
+            const resultEl = document.getElementById('qr-result');
+            const startBtn = document.getElementById('start-qr-camera-btn');
+            const fileInput = document.getElementById('qr-file-input');
+            const errorMsg = document.getElementById('qr-camera-error');
+            const line = document.getElementById('qr-line');
 
-        function dinamikQrKodlariOlustur() {
-            const konteyner = document.getElementById('dinamikQrKonteyneri');
-            if (!konteyner) return;
-            konteyner.innerHTML = ''; 
+            let stream = null;
+            let animationFrameId = null;
 
-            islevKartlari.forEach(kart => {
-                const qrKarti = document.createElement('div');
-                qrKarti.className = 'info-card rounded-xl p-4 text-center card-hover-effect';
-                
-                qrKarti.innerHTML = `
-                    <img src="${kart.qrGorselURL}" alt="${kart.islevAdi} için QR Kodu" class="mx-auto rounded-md p-2 bg-white" onerror="this.onerror=null;this.src='https://placehold.co/150/ffffff/000000?text=QR+Kod';">
-                    <h4 class="text-md font-semibold text-white mt-3">${kart.islevAdi}</h4>
-                    <a href="${kart.hovercodeURL}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 break-all">${kart.hovercodeURL}</a>
-                `;
-                konteyner.appendChild(qrKarti);
+            function tick() {
+                if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                    canvas.height = video.videoHeight;
+                    canvas.width = video.videoWidth;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                        inversionAttempts: "dontInvert",
+                    });
+
+                    if (code) {
+                        resultEl.textContent = code.data;
+                        stopCamera();
+                    }
+                }
+                if (stream && stream.active) {
+                   animationFrameId = requestAnimationFrame(tick);
+                }
+            }
+            
+            async function startCamera() {
+                try {
+                     if (stream) { stream.getTracks().forEach(track => track.stop()); }
+                    errorMsg.classList.add('hidden');
+                    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
+                    video.srcObject = stream;
+                    line.style.display = 'block';
+                    startBtn.textContent = "Kamerayı Kapat";
+                    animationFrameId = requestAnimationFrame(tick);
+                } catch(e) {
+                    errorMsg.textContent = "Kamera başlatılamadı.";
+                    errorMsg.classList.remove('hidden');
+                    console.error(e);
+                }
+            }
+
+            function stopCamera() {
+                if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                video.srcObject = null;
+                stream = null;
+                line.style.display = 'none';
+                startBtn.textContent = "Kamerayı Aç";
+            }
+
+            startBtn.addEventListener('click', () => {
+                if (stream && stream.active) {
+                    stopCamera();
+                } else {
+                    startCamera();
+                }
+            });
+
+            fileInput.addEventListener('change', e => {
+                if (e.target.files.length === 0) return;
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const ctx = canvas.getContext('2d');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const code = jsQR(imageData.data, imageData.width, imageData.height);
+                        if(code) {
+                            resultEl.textContent = code.data;
+                        } else {
+                            resultEl.textContent = "QR Kod bulunamadı.";
+                        }
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
             });
         }
+
     </script>
 </body>
 </html>
