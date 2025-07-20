@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOLO-VISION | Proje Paneli</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Arka plana kent silüeti ekleniyor ve üzerine koyu bir katman çekiliyor */
+            background-image: linear-gradient(rgba(17, 24, 39, 0.95), rgba(17, 24, 39, 0.98)), url('https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #F3F4F6;
+        }
+        .card-hover-effect {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .card-hover-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #374151;
+        }
+        audio::-webkit-media-controls-play-button,
+        audio::-webkit-media-controls-mute-button {
+            background-color: #9CA3AF;
+            border-radius: 50%;
+        }
+        /* Bilgilendirme kartları için ek stiller */
+        .info-card {
+            background-color: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        /* Modal için stiller */
+        #welcome-modal {
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+        }
+        /* Yüksek kontrast modu için stiller */
+        .high-contrast {
+            background-image: none !important;
+            background-color: #000 !important;
+            color: #FFFF00 !important;
+        }
+        .high-contrast .info-card, .high-contrast .bg-gray-800\/80 {
+            background-color: #000 !important;
+            border: 1px solid #FFFF00;
+        }
+        .high-contrast h1, .high-contrast h2, .high-contrast h3, .high-contrast p, .high-contrast button {
+            color: #FFFF00 !important;
+        }
+         .high-contrast [class*="text-gray-"] {
+            color: #FFFF00 !important;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Sesli Yönerge Modalı -->
+    <div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300">
+        <div class="bg-gray-800 rounded-2xl p-8 text-center shadow-2xl max-w-sm mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
+            <img src="logo111111.png" alt="HOLO-VISION Logosu" class="h-20 w-auto mx-auto mb-4" onerror="this.onerror=null;this.src='https://placehold.co/200x100/374151/FFFFFF?text=Logo';">
+            <h2 class="text-2xl font-bold text-white mb-2">Sesli Yönerge</h2>
+            <p class="text-gray-400 mb-6">Uygulamayı keşfetmeniz için sesli yönerge otomatik olarak başlatıldı.</p>
+            <div class="flex justify-center gap-4">
+                <button id="skip-modal-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-transform duration-200 hover:scale-105" aria-label="Sesli yönergeyi kapat">Anladım, Kapat</button>
+            </div>
+        </div>
+    </div>
+    <audio id="voice-instruction">
+        <source src="sesli yonerge.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Erişilebilirlik Butonu -->
+    <button id="accessibility-btn" class="fixed top-4 right-4 z-50 bg-gray-800/50 backdrop-blur-sm p-3 rounded-full text-white hover:bg-gray-700/70 transition-colors" aria-label="Yüksek Kontrast Modunu Aç/Kapat">
+        <i class="ph-bold ph-eye text-2xl"></i>
+    </button>
+
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <!-- GİRİŞ EKRANI BÖLÜMÜ -->
+        <header id="hero-section" class="text-center py-16">
+            <div class="flex justify-center mb-8">
+                <img src="logo111111.png" alt="HOLO-VISION Logosu" class="h-28 w-auto" onerror="this.onerror=null;this.src='https://placehold.co/200x100/111827/FFFFFF?text=Logo';">
+            </div>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-white mb-4">HOLO-VISION</h1>
+            <p class="text-xl text-gray-300 max-w-3xl mx-auto">Engelsiz kentler için teknolojiyi adımlarınıza taşıyoruz.</p>
+            
+            <!-- Bilgilendirme Kartları (İnfografikler) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 max-w-6xl mx-auto">
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
+                    <i class="ph-bold ph-person-simple-walk text-5xl text-red-500 mx-auto mb-4"></i>
+                    <h3 class="text-lg font-bold text-white">Problem</h3>
+                    <p class="text-sm text-gray-400 mt-1">Kentlerdeki fiziksel engeller ve yönlendirme eksikliği.</p>
+                </div>
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
+                    <i class="ph-bold ph-cpu text-5xl text-blue-500 mx-auto mb-4"></i>
+                    <h3 class="text-lg font-bold text-white">Teknoloji</h3>
+                    <p class="text-sm text-gray-400 mt-1">Ultrasonik ve renk sensörleri ile donatılmış akıllı sistem.</p>
+                </div>
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
+                    <i class="ph-bold ph-shoe text-5xl text-green-500 mx-auto mb-4"></i>
+                    <h3 class="text-lg font-bold text-white">Çözüm</h3>
+                    <p class="text-sm text-gray-400 mt-1">Titreşim ve sesli uyarılar üreten giyilebilir akıllı ayakkabı.</p>
+                </div>
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
+                    <i class="ph-bold ph-shield-check text-5xl text-yellow-500 mx-auto mb-4"></i>
+                    <h3 class="text-lg font-bold text-white">Etki</h3>
+                    <p class="text-sm text-gray-400 mt-1">Güvenli, bağımsız hareket ve artan toplumsal katılım.</p>
+                </div>
+            </div>
+            
+            <div class="mt-16">
+                 <div class="bg-gray-800/50 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-lg max-w-md mx-auto border border-white/10">
+                    <img src="afis gorsel111.png" alt="Engelsiz Kentler Proje Afişi" class="rounded-lg w-full" onerror="this.onerror=null;this.src='https://placehold.co/600x800/1f2937/FFFFFF?text=Afiş+Yüklenemedi';">
+                </div>
+            </div>
+        </section>
+
+        <main class="space-y-16">
+            
+            <!-- İstatistik Paneli Bölümü -->
+            <section id="stats-section" aria-labelledby="stats-heading">
+                <h2 id="stats-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Canlı İstatistik Paneli</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="info-card rounded-xl p-6 flex items-center gap-4">
+                        <i class="ph-bold ph-qr-code text-4xl text-green-400"></i>
+                        <div>
+                            <p class="text-sm text-gray-400">Toplam Tarama</p>
+                            <p class="text-3xl font-bold text-white" id="total-scans"></p>
+                        </div>
+                    </div>
+                    <div class="info-card rounded-xl p-6 flex items-center gap-4">
+                        <i class="ph-bold ph-users text-4xl text-indigo-400"></i>
+                        <div>
+                            <p class="text-sm text-gray-400">Toplam Ziyaretçi</p>
+                            <p class="text-3xl font-bold text-white" id="total-visitors"></p>
+                        </div>
+                    </div>
+                    <div class="info-card rounded-xl p-6 flex items-center gap-4">
+                        <i class="ph-bold ph-map-pin text-4xl text-red-400"></i>
+                        <div>
+                            <p class="text-sm text-gray-400">Tespit Edilen Konum</p>
+                            <p class="text-xl font-bold text-white" id="location-info">İzin bekleniyor...</p>
+                        </div>
+                    </div>
+                     <div class="info-card rounded-xl p-6 flex items-center gap-4">
+                        <i class="ph-bold ph-trophy text-4xl text-yellow-400"></i>
+                        <div>
+                            <p class="text-sm text-gray-400">En Popüler Kod</p>
+                            <p class="text-2xl font-bold text-white">Park Alanı</p>
+                        </div>
+                    </div>
+                </div>
+                 <div class="info-card rounded-xl p-6 mt-6">
+                    <h3 class="text-lg font-semibold mb-4">Haftalık Tarama Trendi</h3>
+                    <div id="bar-chart" class="flex items-end justify-between h-40"></div>
+                     <p class="text-xs text-gray-500 mt-2 text-right">Son Güncelleme: <span id="last-updated"></span></p>
+                </div>
+            </section>
+
+            <!-- Google Maps Entegrasyonu -->
+            <section id="map-section" aria-labelledby="map-heading">
+                <h2 id="map-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">İşlev Alanları Haritası</h2>
+                <div class="info-card rounded-xl p-2 shadow-lg h-96">
+                    <iframe 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d192597.2943615963!2d28.8473703463382!3d41.04832386241019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1ccfe98bc01b0d0!2s%C4%B0stanbul!5e0!3m2!1str!2str!4v1720000000000!5m2!1str!2str" 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0;" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="İşlev Alanları Haritası">
+                    </iframe>
+                </div>
+            </section>
+
+            <!-- Diğer Bölümler... -->
+            <section id="functions-section" aria-labelledby="functions-heading">
+                <h2 id="functions-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Proje İşlevleri ve Sesli Bilgilendirme</h2>
+                <div id="islevKonteyneri" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </section>
+
+            <section id="dynamic-qr-section" aria-labelledby="qr-heading">
+                <h2 id="qr-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Dinamik QR Kod Yönetimi</h2>
+                <div id="dinamikQrKonteyneri" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6"></div>
+            </section>
+
+            <section id="qrcards-section" aria-labelledby="qrcards-heading">
+                <h2 id="qrcards-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">QR Kod Kart Tasarımları</h2>
+                <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-lg border border-white/10">
+                    <img src="KARTLAR.png" alt="QR Kod Kart Tasarımları" class="rounded-lg w-full" onerror="this.onerror=null;this.src='https://placehold.co/1200x600/1f2937/FFFFFF?text=Tasarım+Görseli+Yüklenemedi';">
+                </div>
+            </section>
+
+            <section id="yonerge-section" aria-labelledby="yonerge-heading">
+                <h2 id="yonerge-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Proje Yönergesi ve Kart Detayı</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-lg border border-white/10">
+                        <h3 class="text-xl font-semibold text-white mb-4 text-center">Genel İşleyiş</h3>
+                        <img src="YONERGE.png" alt="Proje Genel İşleyişi" class="rounded-lg w-full" onerror="this.onerror=null;this.src='https://placehold.co/600x800/1f2937/FFFFFF?text=Yönerge+Yüklenemedi';">
+                    </div>
+                    <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-lg border border-white/10">
+                        <h3 class="text-xl font-semibold text-white mb-4 text-center">Örnek Kart Açıklaması</h3>
+                        <img src="KART YONERGE.png" alt="Örnek QR Kod Kartı Açıklaması" class="rounded-lg w-full" onerror="this.onerror=null;this.src='https://placehold.co/600x800/1f2937/FFFFFF?text=Kart+Detayı+Yüklenemedi';">
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-20 text-gray-500 text-sm">
+            <p>&copy; 2025 HOLO-VISION Takımı. Tüm hakları saklıdır.</p>
+        </footer>
+    </div>
+
+    <script>
+        const islevKartlari = [
+            { id: 1, islevAdi: "Otobüs Durağı", aciklama: "Güvenli rota kartı. Otobüs duraklarını temsil eder ve yaklaşıldığında sesli uyarı verir.", gorselURL: "DURAK.png", qrGorselURL: "Otobüs Durağı.png", sesURL: "Otobüs Durağı.mp3", icon: "ph-bus", hovercodeURL: "https://scanqr.to/bb21e661" },
+            { id: 2, islevAdi: "Hastane Alanı", aciklama: "Güvenli rota kartı. Hastanelerin giriş ve acil servis bölgelerini belirtir.", gorselURL: "HASTANE.png", qrGorselURL: "Hastane Alanı.png", sesURL: "Hastane Alanı.mp3", icon: "ph-first-aid-kit", hovercodeURL: "https://scanqr.to/a09a589f" },
+            { id: 3, islevAdi: "Okul Alanı", aciklama: "Güvenli rota kartı. Okul çevreleri ve yaya geçitleri için bilgilendirme yapar.", gorselURL: "OKUL.png", qrGorselURL: "Okul Alanı.png", sesURL: "Okul Alanı.mp3", icon: "ph-student", hovercodeURL: "https://scanqr.to/49c2c4f6" },
+            { id: 4, islevAdi: "Park Alanı", aciklama: "Güvenli rota kartı. Park ve dinlenme alanlarının girişlerini belirtir.", gorselURL: "PARK.png", qrGorselURL: "Park Alanı.png", sesURL: "Park Alanı.mp3", icon: "ph-tree", hovercodeURL: "https://scanqr.to/50366d18" },
+            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı. AVM ve yoğun ticari bölgeler için bilgilendirme yapar.", gorselURL: "TİCARİ.png", qrGorselURL: "Ticari Alan.png", sesURL: "Ticari Alan.mp3", icon: "ph-shopping-cart-simple", hovercodeURL: "https://scanqr.to/473fbabe" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initWelcomeModal();
+            initAccessibility();
+            kartlariOlustur();
+            sensorSimulasyonunuBaslat();
+            dinamikQrKodlariOlustur();
+            initStatsDashboard();
+        });
+
+        function initWelcomeModal() {
+            const welcomeModal = document.getElementById('welcome-modal');
+            const modalContent = document.getElementById('modal-content');
+            const skipBtn = document.getElementById('skip-modal-btn');
+            const instructionAudio = document.getElementById('voice-instruction');
+
+            if (!welcomeModal || !modalContent || !skipBtn || !instructionAudio) return;
+
+            setTimeout(() => {
+                welcomeModal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+                instructionAudio.play().catch(error => console.log("Otomatik oynatma engellendi. Kullanıcı etkileşimi bekleniyor."));
+            }, 500);
+
+            const closeModal = () => {
+                instructionAudio.pause();
+                instructionAudio.currentTime = 0;
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    welcomeModal.classList.add('opacity-0');
+                    setTimeout(() => welcomeModal.style.display = 'none', 300);
+                }, 300);
+            };
+                
+            skipBtn.addEventListener('click', closeModal);
+        }
+
+        function initAccessibility() {
+            const accessibilityBtn = document.getElementById('accessibility-btn');
+            accessibilityBtn.addEventListener('click', () => {
+                document.body.classList.toggle('high-contrast');
+            });
+        }
+
+        function initStatsDashboard() {
+            const totalScansEl = document.getElementById('total-scans');
+            const totalVisitorsEl = document.getElementById('total-visitors');
+            const lastUpdatedEl = document.getElementById('last-updated');
+            const locationInfoEl = document.getElementById('location-info');
+
+            // Simüle edilmiş başlangıç değerleri
+            let scanCount = 1482 + Math.floor(Math.random() * 50);
+            let visitorCount = 312 + Math.floor(Math.random() * 20);
+
+            totalScansEl.textContent = scanCount;
+            totalVisitorsEl.textContent = visitorCount;
+            lastUpdatedEl.textContent = new Date().toLocaleTimeString('tr-TR');
+
+            // Konum bilgisini al
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    // Ücretsiz bir reverse geocoding API'si kullanıyoruz
+                    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=tr`)
+                        .then(res => res.json())
+                        .then(data => {
+                            locationInfoEl.textContent = `${data.city}, ${data.countryName}`;
+                        })
+                        .catch(err => {
+                            console.error("Konum bilgisi alınamadı:", err);
+                            locationInfoEl.textContent = "Bilinmiyor";
+                        });
+                }, () => {
+                    locationInfoEl.textContent = "İzin verilmedi";
+                });
+            } else {
+                locationInfoEl.textContent = "Desteklenmiyor";
+            }
+
+            // Grafik animasyonu
+            const chart = document.getElementById('bar-chart');
+            if(chart) {
+                const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+                const data = [30, 50, 75, 60, 90, 110, 85];
+                days.forEach((day, index) => {
+                    const height = (data[index] / 120) * 100;
+                    const barWrapper = document.createElement('div');
+                    barWrapper.className = 'flex-1 flex flex-col items-center justify-end h-full';
+                    barWrapper.innerHTML = `
+                        <div class="w-3/4 bg-blue-500 rounded-t-lg transition-all duration-1000" style="height: 0%;" title="${data[index]} tarama"></div>
+                        <p class="text-xs text-gray-400 mt-2">${day}</p>
+                    `;
+                    chart.appendChild(barWrapper);
+
+                    setTimeout(() => {
+                        barWrapper.querySelector('div').style.height = `${height}%`;
+                    }, 200 * (index + 1));
+                });
+            }
+        }
+
+        function kartlariOlustur() {
+            const konteyner = document.getElementById('islevKonteyneri');
+            if (!konteyner) return;
+
+            islevKartlari.forEach(kart => {
+                const islevKarti = document.createElement('div');
+                islevKarti.className = 'info-card rounded-xl overflow-hidden shadow-lg flex flex-col card-hover-effect';
+                const audio = new Audio(kart.sesURL);
+
+                islevKarti.innerHTML = `
+                    <div class="relative">
+                        <img src="${kart.gorselURL}" alt="${kart.islevAdi} için kart görseli" class="w-full h-52 object-contain p-4 bg-gray-900/50">
+                        <div class="absolute top-3 right-3 bg-black bg-opacity-50 p-2 rounded-full">
+                            <i class="ph-bold ${kart.icon} text-2xl text-white"></i>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white mb-2">${kart.islevAdi}</h3>
+                        <p class="text-gray-400 text-sm mb-4 flex-grow">${kart.aciklama}</p>
+                    </div>
+                `;
+                
+                islevKarti.addEventListener('mouseenter', () => {
+                    audio.play();
+                });
+                islevKarti.addEventListener('mouseleave', () => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                });
+
+                konteyner.appendChild(islevKarti);
+            });
+        }
+
+        function sensorSimulasyonunuBaslat() {
+            const colorDisplay = document.getElementById('color-display');
+            const rgbValue = document.getElementById('rgb-value');
+            if (!colorDisplay || !rgbValue) return;
+
+            setInterval(() => {
+                const r = Math.floor(Math.random() * 256);
+                const g = Math.floor(Math.random() * 256);
+                const b = Math.floor(Math.random() * 256);
+                const hexColor = `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+                colorDisplay.style.backgroundColor = hexColor;
+                colorDisplay.innerHTML = '';
+                rgbValue.textContent = hexColor.toUpperCase();
+            }, 3000);
+        }
+
+        function dinamikQrKodlariOlustur() {
+            const konteyner = document.getElementById('dinamikQrKonteyneri');
+            if (!konteyner) return;
+
+            islevKartlari.forEach(kart => {
+                const qrKarti = document.createElement('div');
+                qrKarti.className = 'info-card rounded-xl p-4 text-center card-hover-effect';
+                
+                qrKarti.innerHTML = `
+                    <img src="${kart.qrGorselURL}" alt="${kart.islevAdi} için QR Kodu" class="mx-auto rounded-md p-2 bg-white">
+                    <h4 class="text-md font-semibold text-white mt-3">${kart.islevAdi}</h4>
+                    <a href="${kart.hovercodeURL}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 break-all">${kart.hovercodeURL}</a>
+                `;
+                konteyner.appendChild(qrKarti);
+            });
+        }
+    </script>
+</body>
+</html>
