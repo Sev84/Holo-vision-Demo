@@ -67,17 +67,17 @@
     <div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300">
         <div class="bg-gray-800 rounded-2xl p-8 text-center shadow-2xl max-w-sm mx-4 transform transition-all duration-300 scale-95 opacity-0" id="modal-content">
             <img src="logo111111.png" alt="HOLO-VISION Logosu" class="h-20 w-auto mx-auto mb-4" onerror="this.onerror=null;this.src='https://placehold.co/200x100/374151/FFFFFF?text=Logo';">
-            <h2 class="text-2xl font-bold text-white mb-2">Sesli Yönerge</h2>
-            <p class="text-gray-400 mb-6">Uygulamayı keşfetmeniz için sesli yönerge otomatik olarak başlatıldı.</p>
+            <h2 class="text-2xl font-bold text-white mb-2">Uygulamaya Hoş Geldiniz</h2>
+            <p class="text-gray-400 mb-6">Başlamak için sesli yönergeyi dinleyebilir veya kapatabilirsiniz.</p>
             <div class="flex justify-center gap-4">
-                <button id="skip-modal-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-transform duration-200 hover:scale-105" aria-label="Sesli yönergeyi kapat">Anladım, Kapat</button>
+                 <button id="play-guide-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-transform duration-200 hover:scale-105" aria-label="Sesli Yönergeyi Oynat">
+                    <i class="ph-bold ph-play-circle"></i> Yönergeyi Oynat
+                </button>
+                <button id="skip-modal-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-transform duration-200 hover:scale-105" aria-label="Sesli yönergeyi kapat">Kapat</button>
             </div>
         </div>
     </div>
-    <audio id="voice-instruction">
-        <!-- Not: Yerel ses dosyaları bu ortamda çalışmaz. Geçerli bir URL gereklidir. -->
-        <!-- <source src="sesli yonerge.mp3" type="audio/mpeg"> -->
-    </audio>
+    <audio id="voice-instruction" src="https://sev84.github.io/Holo-vision-Demo/sesli%20yonerge.mp3" preload="auto"></audio>
 
     <!-- Erişilebilirlik Butonu -->
     <button id="accessibility-btn" class="fixed top-4 right-4 z-50 bg-gray-800/50 backdrop-blur-sm p-3 rounded-full text-white hover:bg-gray-700/70 transition-colors" aria-label="Yüksek Kontrast Modunu Aç/Kapat">
@@ -195,6 +195,7 @@
                                         <i id="matched-color-icon" class="ph text-3xl sm:text-4xl text-white"></i>
                                     </div>
                                     <p id="matched-color-name" class="text-lg sm:text-xl font-bold text-white mt-2">-</p>
+                                    <p id="matched-color-percentage" class="text-sm text-blue-300 mt-1"></p>
                                 </div>
                             </div>
                             <div class="flex justify-center">
@@ -269,17 +270,15 @@
             { id: 2, islevAdi: "Hastane Alanı", aciklama: "Güvenli rota kartı. Hastanelerin giriş ve acil servis bölgelerini belirtir.", gorselURL: "HASTANE.png", qrGorselURL: "Hastane Alanı.png", sesDosyasi: "Hastane Alanı.mp3", icon: "ph-first-aid-kit", hovercodeURL: "https://scanqr.to/a09a589f" },
             { id: 3, islevAdi: "Okul Alanı", aciklama: "Güvenli rota kartı. Okul çevreleri ve yaya geçitleri için bilgilendirme yapar.", gorselURL: "OKUL.png", qrGorselURL: "Okul Alanı.png", sesDosyasi: "Okul Alanı.mp3", icon: "ph-student", hovercodeURL: "https://scanqr.to/49c2c4f6" },
             { id: 4, islevAdi: "Park Alanı", aciklama: "Güvenli rota kartı. Park ve dinlenme alanlarının girişlerini belirtir.", gorselURL: "PARK.png", qrGorselURL: "Park Alanı.png", sesDosyasi: "Park Alanı.mp3", icon: "ph-tree", hovercodeURL: "https://scanqr.to/50366d18" },
-            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı. AVM ve yoğun ticari bölgeler için bilgilendirme yapar.", gorselURL: "TİCARİ.png", qrGorselURL: "Ticari Alan.png", sesDosyasi: "Ticari Alan.mp3", icon: "ph-shopping-cart-simple", hovercodeURL: "https://scanqr.to/473fbabe" }
+            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı. AVM ve yoğun ticari bölgeler için bilgilendirme yapar.", gorselURL: "TİCARİ.png", qrGorselURL: "Ticari Alanı.png", sesDosyasi: "Ticari Alanı.mp3", icon: "ph-shopping-cart-simple", hovercodeURL: "https://scanqr.to/473fbabe" }
         ];
 
-        // YENİ: İsteğinize göre düzenlenen renk ve ses eşleşmeleri
         const renkEslesmeleri = [
-            // DİKKAT: Kendi ses dosyalarınızı bir sunucuya yükleyip bu URL'leri değiştirmeniz gerekmektedir.
-            { name: "Okul Alanı", hex: "#FFA500", r: 255, g: 165, b: 0, icon: "ph-student", sesURL: "https://cdn.pixabay.com/audio/2022/11/21/audio_a1bd0b7a37.mp3" }, // Turuncu
-            { name: "Park Alanı", hex: "#800080", r: 128, g: 0, b: 128, icon: "ph-tree", sesURL: "https://cdn.pixabay.com/audio/2022/03/10/audio_a6a08c1243.mp3" }, // Mor
-            { name: "Hastane Alanı", hex: "#40E0D0", r: 64, g: 224, b: 208, icon: "ph-first-aid-kit", sesURL: "https://cdn.pixabay.com/audio/2021/08/04/audio_a52f9f5363.mp3" }, // Turkuaz
-            { name: "Ticari Alan", hex: "#FFFF00", r: 255, g: 255, b: 0, icon: "ph-shopping-cart-simple", sesURL: "https://cdn.pixabay.com/audio/2022/03/15/audio_2c737596e1.mp3" }, // Sarı
-            { name: "Otobüs Durağı", hex: "#008000", r: 0, g: 128, b: 0, icon: "ph-bus", sesURL: "https://cdn.pixabay.com/audio/2022/02/15/audio_5893006a84.mp3" } // Yeşil
+            { name: "Okul Alanı", hex: "#FFA500", r: 255, g: 165, b: 0, icon: "ph-student", sesURL: "https://sev84.github.io/Holo-vision-Demo/Okul%20Alan%C4%B1.mp3" }, // Turuncu
+            { name: "Park Alanı", hex: "#800080", r: 128, g: 0, b: 128, icon: "ph-tree", sesURL: "https://sev84.github.io/Holo-vision-Demo/Park%20Alan%C4%B1.mp3" }, // Mor
+            { name: "Hastane Alanı", hex: "#40E0D0", r: 64, g: 224, b: 208, icon: "ph-first-aid-kit", sesURL: "https://sev84.github.io/Holo-vision-Demo/Hastane%20Alan%C4%B1.mp3" }, // Turkuaz
+            { name: "Ticari Alan", hex: "#FFFF00", r: 255, g: 255, b: 0, icon: "ph-shopping-cart-simple", sesURL: "https://sev84.github.io/Holo-vision-Demo/Ticari%20Alan.mp3" }, // Sarı
+            { name: "Otobüs Durağı", hex: "#008000", r: 0, g: 128, b: 0, icon: "ph-bus", sesURL: "https://sev84.github.io/Holo-vision-Demo/Otob%C3%BCs%20Dura%C4%9F%C4%B1.mp3" } // Yeşil
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -295,9 +294,10 @@
             const welcomeModal = document.getElementById('welcome-modal');
             const modalContent = document.getElementById('modal-content');
             const skipBtn = document.getElementById('skip-modal-btn');
+            const playBtn = document.getElementById('play-guide-btn');
             const instructionAudio = document.getElementById('voice-instruction');
 
-            if (!welcomeModal || !modalContent || !skipBtn) return;
+            if (!welcomeModal || !modalContent || !skipBtn || !playBtn || !instructionAudio) return;
 
             setTimeout(() => {
                 welcomeModal.classList.add('opacity-100');
@@ -306,7 +306,7 @@
             }, 500);
 
             const closeModal = () => {
-                if (instructionAudio && instructionAudio.duration > 0 && !instructionAudio.paused) {
+                if (instructionAudio.duration > 0 && !instructionAudio.paused) {
                     instructionAudio.pause();
                     instructionAudio.currentTime = 0;
                 }
@@ -317,6 +317,15 @@
                 }, 300);
             };
             
+            playBtn.addEventListener('click', () => {
+                if (instructionAudio.paused) {
+                    instructionAudio.play().catch(e => console.error("Yönerge sesi oynatılamadı:", e));
+                } else {
+                    instructionAudio.pause();
+                    instructionAudio.currentTime = 0;
+                }
+            });
+
             skipBtn.addEventListener('click', closeModal);
         }
 
@@ -413,6 +422,7 @@
             const matchedColorPreview = document.getElementById('matched-color-preview');
             const matchedColorName = document.getElementById('matched-color-name');
             const matchedColorIcon = document.getElementById('matched-color-icon');
+            const matchedColorPercentage = document.getElementById('matched-color-percentage');
             const startBtn = document.getElementById('start-camera-btn');
             const errorMsg = document.getElementById('camera-error');
             const crosshair = document.getElementById('crosshair');
@@ -423,18 +433,17 @@
             let matchAudio = new Audio();
 
             const findClosestColor = (r, g, b) => {
-                let closestMatch = null;
-                let minDistance = Infinity;
+                let closestMatch = { color: null, distance: Infinity };
 
                 for (const color of renkEslesmeleri) {
                     const distance = Math.sqrt(Math.pow(r - color.r, 2) + Math.pow(g - color.g, 2) + Math.pow(b - color.b, 2));
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        closestMatch = color;
+                    if (distance < closestMatch.distance) {
+                        closestMatch.distance = distance;
+                        closestMatch.color = color;
                     }
                 }
                 const threshold = 180; 
-                return minDistance < threshold ? closestMatch : null;
+                return closestMatch.distance < threshold ? closestMatch : { color: null, distance: Infinity };
             };
 
             const processFrame = () => {
@@ -468,22 +477,36 @@
                 colorPreview.style.backgroundColor = hexColor;
                 colorValue.textContent = hexColor.toUpperCase();
 
-                const matchedColor = findClosestColor(r, g, b);
+                const { color: matchedColor, distance } = findClosestColor(r, g, b);
 
                 if (matchedColor) {
+                    const percentage = Math.round(Math.max(0, (1 - (distance / 180)) * 100));
                     matchedColorPreview.style.backgroundColor = matchedColor.hex;
                     matchedColorName.textContent = matchedColor.name;
                     matchedColorIcon.className = `ph ${matchedColor.icon} text-4xl text-black`;
+                    matchedColorPercentage.textContent = `Benzerlik: %${percentage}`;
                     
                     if (lastMatchedColorName !== matchedColor.name) {
                         lastMatchedColorName = matchedColor.name;
+                        
+                        // Sesi çalmadan önce mevcut sesi durdur
+                        if (!matchAudio.paused) {
+                            matchAudio.pause();
+                            matchAudio.currentTime = 0;
+                        }
+                        
                         matchAudio.src = matchedColor.sesURL;
-                        matchAudio.play().catch(e => console.error("Ses dosyası oynatılamadı:", e));
+                        matchAudio.play().catch(e => {
+                            if (e.name !== 'AbortError') {
+                                console.error("Ses dosyası oynatılamadı:", e);
+                            }
+                        });
                     }
                 } else {
                     matchedColorPreview.style.backgroundColor = '#000';
                     matchedColorName.textContent = '-';
                     matchedColorIcon.className = 'ph text-4xl text-white';
+                    matchedColorPercentage.textContent = '';
                     lastMatchedColorName = null;
                 }
             };
@@ -500,7 +523,7 @@
                         startBtn.classList.replace('bg-green-600', 'bg-red-600');
                         startBtn.classList.replace('hover:bg-green-700', 'hover:bg-red-700');
                         crosshair.style.display = 'block';
-                        intervalId = setInterval(processFrame, 200);
+                        intervalId = setInterval(processFrame, 250); // Tarama aralığını biraz artırarak performansı iyileştir
                     };
                 } catch (err) {
                     console.error("Kamera erişim hatası:", err);
@@ -526,6 +549,7 @@
                 matchedColorPreview.style.backgroundColor = '#000';
                 matchedColorName.textContent = '-';
                 matchedColorIcon.className = 'ph text-4xl text-white';
+                matchedColorPercentage.textContent = '';
                 lastMatchedColorName = null;
                 if (matchAudio) matchAudio.pause();
             };
