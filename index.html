@@ -235,4 +235,302 @@
             </section>
 
             <section id="yonerge-section" aria-labelledby="yonerge-heading">
-                <h2 id="yonerge-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Pr
+                <h2 id="yonerge-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Proje Yönergesi ve Kart Detayı</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-lg border border-white/10">
+                        <h3 class="text-xl font-semibold text-white mb-4 text-center">Genel İşleyiş</h3>
+                        <img src="YONERGE.png" alt="Proje Genel İşleyişi" class="rounded-lg w-full" onerror="this.onerror=null;this.src='https://placehold.co/600x800/1f2937/FFFFFF?text=Yönerge+Yüklenemedi';">
+                    </div>
+                    <div class="bg-gray-800/80 backdrop-blur-sm rounded-xl p-3 sm:p-4 shadow-lg border border-white/10">
+                        <h3 class="text-xl font-semibold text-white mb-4 text-center">Örnek Kart Açıklaması</h3>
+                        <img src="KART YONERGE.png" alt="Örnek QR Kod Kartı Açıklaması" class="rounded-lg w-full" onerror="this.onerror=null;this.src='https://placehold.co/600x800/1f2937/FFFFFF?text=Kart+Detayı+Yüklenemedi';">
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-20 text-gray-500 text-sm">
+            <p>&copy; 2025 HOLO-VISION Takımı. Tüm hakları saklıdır.</p>
+        </footer>
+    </div>
+
+    <script>
+        const islevKartlari = [
+            { id: 1, islevAdi: "Otobüs Durağı", aciklama: "Güvenli rota kartı. Otobüs duraklarını temsil eder ve yaklaşıldığında sesli uyarı verir.", gorselURL: "DURAK.png", qrGorselURL: "Otobüs Durağı.png", sesURL: "Otobüs Durağı.mp3", icon: "ph-bus", hovercodeURL: "https://scanqr.to/bb21e661" },
+            { id: 2, islevAdi: "Hastane Alanı", aciklama: "Güvenli rota kartı. Hastanelerin giriş ve acil servis bölgelerini belirtir.", gorselURL: "HASTANE.png", qrGorselURL: "Hastane Alanı.png", sesURL: "Hastane Alanı.mp3", icon: "ph-first-aid-kit", hovercodeURL: "https://scanqr.to/a09a589f" },
+            { id: 3, islevAdi: "Okul Alanı", aciklama: "Güvenli rota kartı. Okul çevreleri ve yaya geçitleri için bilgilendirme yapar.", gorselURL: "OKUL.png", qrGorselURL: "Okul Alanı.png", sesURL: "Okul Alanı.mp3", icon: "ph-student", hovercodeURL: "https://scanqr.to/49c2c4f6" },
+            { id: 4, islevAdi: "Park Alanı", aciklama: "Güvenli rota kartı. Park ve dinlenme alanlarının girişlerini belirtir.", gorselURL: "PARK.png", qrGorselURL: "Park Alanı.png", sesURL: "Park Alanı.mp3", icon: "ph-tree", hovercodeURL: "https://scanqr.to/50366d18" },
+            { id: 5, islevAdi: "Ticari Alan", aciklama: "Güvenli rota kartı. AVM ve yoğun ticari bölgeler için bilgilendirme yapar.", gorselURL: "TİCARİ.png", qrGorselURL: "Ticari Alan.png", sesURL: "Ticari Alan.mp3", icon: "ph-shopping-cart-simple", hovercodeURL: "https://scanqr.to/473fbabe" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initWelcomeModal();
+            initAccessibility();
+            kartlariOlustur();
+            initCameraColorPicker(); // Eski simülasyon yerine yeni kamera fonksiyonunu çağırıyoruz
+            dinamikQrKodlariOlustur();
+            initStatsDashboard();
+        });
+
+        function initWelcomeModal() {
+            const welcomeModal = document.getElementById('welcome-modal');
+            const modalContent = document.getElementById('modal-content');
+            const skipBtn = document.getElementById('skip-modal-btn');
+            const instructionAudio = document.getElementById('voice-instruction');
+
+            if (!welcomeModal || !modalContent || !skipBtn || !instructionAudio) return;
+
+            setTimeout(() => {
+                welcomeModal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95', 'opacity-0');
+                modalContent.classList.add('scale-100', 'opacity-100');
+                // HATA DÜZELTME: Yerel ses dosyası yüklenemediği için bu satır hataya neden oluyordu.
+                // instructionAudio.play().catch(error => console.log("Otomatik oynatma engellendi. Kullanıcı etkileşimi bekleniyor."));
+            }, 500);
+
+            const closeModal = () => {
+                // HATA DÜZELTME: Ses dosyası olmadığı için bu satırlar gereksiz ve potansiyel hata kaynağı.
+                // instructionAudio.pause();
+                // instructionAudio.currentTime = 0;
+                modalContent.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    welcomeModal.classList.add('opacity-0');
+                    setTimeout(() => welcomeModal.style.display = 'none', 300);
+                }, 300);
+            };
+            
+            skipBtn.addEventListener('click', closeModal);
+        }
+
+        function initAccessibility() {
+            const accessibilityBtn = document.getElementById('accessibility-btn');
+            accessibilityBtn.addEventListener('click', () => {
+                document.body.classList.toggle('high-contrast');
+            });
+        }
+
+        function initStatsDashboard() {
+            const totalScansEl = document.getElementById('total-scans');
+            const totalVisitorsEl = document.getElementById('total-visitors');
+            const lastUpdatedEl = document.getElementById('last-updated');
+            const locationInfoEl = document.getElementById('location-info');
+
+            // Simüle edilmiş başlangıç değerleri
+            let scanCount = 1482 + Math.floor(Math.random() * 50);
+            let visitorCount = 312 + Math.floor(Math.random() * 20);
+
+            totalScansEl.textContent = scanCount;
+            totalVisitorsEl.textContent = visitorCount;
+            lastUpdatedEl.textContent = new Date().toLocaleTimeString('tr-TR');
+
+            // Konum bilgisini al
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    // Ücretsiz bir reverse geocoding API'si kullanıyoruz
+                    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=tr`)
+                        .then(res => res.json())
+                        .then(data => {
+                            locationInfoEl.textContent = `${data.city}, ${data.countryName}`;
+                        })
+                        .catch(err => {
+                            console.error("Konum bilgisi alınamadı:", err);
+                            locationInfoEl.textContent = "Bilinmiyor";
+                        });
+                }, () => {
+                    locationInfoEl.textContent = "İzin verilmedi";
+                });
+            } else {
+                locationInfoEl.textContent = "Desteklenmiyor";
+            }
+
+            // Grafik animasyonu
+            const chart = document.getElementById('bar-chart');
+            if(chart) {
+                const days = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
+                const data = [30, 50, 75, 60, 90, 110, 85];
+                days.forEach((day, index) => {
+                    const height = (data[index] / 120) * 100;
+                    const barWrapper = document.createElement('div');
+                    barWrapper.className = 'flex-1 flex flex-col items-center justify-end h-full';
+                    barWrapper.innerHTML = `
+                        <div class="w-3/4 bg-blue-500 rounded-t-lg transition-all duration-1000" style="height: 0%;" title="${data[index]} tarama"></div>
+                        <p class="text-xs text-gray-400 mt-2">${day}</p>
+                    `;
+                    chart.appendChild(barWrapper);
+
+                    setTimeout(() => {
+                        barWrapper.querySelector('div').style.height = `${height}%`;
+                    }, 200 * (index + 1));
+                });
+            }
+        }
+
+        function kartlariOlustur() {
+            const konteyner = document.getElementById('islevKonteyneri');
+            if (!konteyner) return;
+
+            islevKartlari.forEach(kart => {
+                const islevKarti = document.createElement('div');
+                islevKarti.className = 'info-card rounded-xl overflow-hidden shadow-lg flex flex-col card-hover-effect';
+                // HATA DÜZELTME: Yerel ses dosyaları yüklenemediği için bu satır hataya neden oluyordu.
+                // const audio = new Audio(kart.sesURL);
+
+                islevKarti.innerHTML = `
+                    <div class="relative">
+                        <img src="${kart.gorselURL}" alt="${kart.islevAdi} için kart görseli" class="w-full h-52 object-contain p-4 bg-gray-900/50">
+                        <div class="absolute top-3 right-3 bg-black bg-opacity-50 p-2 rounded-full">
+                            <i class="ph-bold ${kart.icon} text-2xl text-white"></i>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-xl font-semibold text-white mb-2">${kart.islevAdi}</h3>
+                        <p class="text-gray-400 text-sm mb-4 flex-grow">${kart.aciklama}</p>
+                    </div>
+                `;
+                
+                // HATA DÜZELTME: Ses çalma işlevleri, dosya yüklenemediği için devre dışı bırakıldı.
+                /*
+                islevKarti.addEventListener('mouseenter', () => {
+                    audio.play();
+                });
+                islevKarti.addEventListener('mouseleave', () => {
+                    audio.pause();
+                    audio.currentTime = 0;
+                });
+                */
+
+                konteyner.appendChild(islevKarti);
+            });
+        }
+
+        // YENİ: Kamera ile renk tanıma fonksiyonu
+        function initCameraColorPicker() {
+            const video = document.getElementById('camera-feed');
+            const canvas = document.getElementById('snapshot-canvas');
+            const colorPreview = document.getElementById('color-preview');
+            const colorValue = document.getElementById('color-value');
+            const startBtn = document.getElementById('start-camera-btn');
+            const errorMsg = document.getElementById('camera-error');
+            const crosshair = document.getElementById('crosshair');
+
+            let intervalId = null;
+            let stream = null;
+
+            const processFrame = () => {
+                if (!video.srcObject || video.paused || video.ended || !stream || !stream.active) return;
+
+                const context = canvas.getContext('2d', { willReadFrequently: true });
+                
+                // Canvas boyutlarını video boyutlarına eşitle
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                
+                // Video karesini canvas'a çiz
+                context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Canvas'ın merkezindeki piksel verisini al
+                const centerX = Math.floor(canvas.width / 2);
+                const centerY = Math.floor(canvas.height / 2);
+                
+                // Daha kararlı bir renk okuması için küçük bir 10x10 alanın ortalamasını al
+                const sampleSize = 10;
+                const imageData = context.getImageData(centerX - sampleSize / 2, centerY - sampleSize / 2, sampleSize, sampleSize).data;
+                
+                let r = 0, g = 0, b = 0;
+                for (let i = 0; i < imageData.length; i += 4) {
+                    r += imageData[i];
+                    g += imageData[i + 1];
+                    b += imageData[i + 2];
+                }
+                
+                const pixelCount = imageData.length / 4;
+                r = Math.floor(r / pixelCount);
+                g = Math.floor(g / pixelCount);
+                b = Math.floor(b / pixelCount);
+
+                // Hex formatına çevir
+                const toHex = (c) => ('0' + c.toString(16)).slice(-2);
+                const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+
+                // Arayüzü güncelle
+                colorPreview.style.backgroundColor = hexColor;
+                colorValue.textContent = hexColor.toUpperCase();
+            };
+
+            const startCamera = async () => {
+                try {
+                    if (stream) { // Önce mevcut akışı durdur
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+                    errorMsg.classList.add('hidden');
+                    // Mobil cihazlar için arka kamerayı tercih et
+                    stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            facingMode: 'environment' 
+                        } 
+                    });
+                    video.srcObject = stream;
+                    video.onloadedmetadata = () => {
+                        video.play();
+                        startBtn.textContent = 'Kamerayı Durdur';
+                        startBtn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                        startBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+                        crosshair.style.display = 'block';
+                        intervalId = setInterval(processFrame, 100); // 100ms'de bir kareyi işle
+                    };
+                } catch (err) {
+                    console.error("Kamera erişim hatası:", err);
+                    errorMsg.textContent = 'Kamera başlatılamadı. Lütfen tarayıcı izinlerini kontrol edin.';
+                    errorMsg.classList.remove('hidden');
+                    startBtn.textContent = 'Tekrar Dene';
+                }
+            };
+
+            const stopCamera = () => {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                    video.srcObject = null;
+                    stream = null;
+                }
+                if (intervalId) {
+                    clearInterval(intervalId);
+                    intervalId = null;
+                }
+                startBtn.textContent = 'Kamerayı Başlat';
+                startBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                startBtn.classList.add('bg-green-600', 'hover:bg-green-700');
+                crosshair.style.display = 'none';
+                colorPreview.style.backgroundColor = '#000000';
+                colorValue.textContent = '#000000';
+            };
+
+            startBtn.addEventListener('click', () => {
+                if (stream && stream.active) {
+                    stopCamera();
+                } else {
+                    startCamera();
+                }
+            });
+        }
+
+
+        function dinamikQrKodlariOlustur() {
+            const konteyner = document.getElementById('dinamikQrKonteyneri');
+            if (!konteyner) return;
+
+            islevKartlari.forEach(kart => {
+                const qrKarti = document.createElement('div');
+                qrKarti.className = 'info-card rounded-xl p-4 text-center card-hover-effect';
+                
+                qrKarti.innerHTML = `
+                    <img src="${kart.qrGorselURL}" alt="${kart.islevAdi} için QR Kodu" class="mx-auto rounded-md p-2 bg-white">
+                    <h4 class="text-md font-semibold text-white mt-3">${kart.islevAdi}</h4>
+                    <a href="${kart.hovercodeURL}" target="_blank" class="text-xs text-blue-400 hover:text-blue-300 break-all">${kart.hovercodeURL}</a>
+                `;
+                konteyner.appendChild(qrKarti);
+            });
+        }
+    </script>
+</body>
+</html>
