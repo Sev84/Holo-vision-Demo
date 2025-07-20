@@ -53,6 +53,17 @@
          .high-contrast [class*="text-gray-"] {
             color: #FFFF00 !important;
         }
+        /* Canlı İstatistik Paneli Stilleri */
+        #live-stats {
+            transition: opacity 0.5s ease-in-out;
+        }
+        #live-stats ul li {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -78,6 +89,17 @@
         <i class="ph-bold ph-eye text-2xl"></i>
     </button>
 
+    <!-- Canlı İstatistik Paneli -->
+    <div id="live-stats" class="fixed top-4 left-4 z-50 bg-gray-900/70 backdrop-blur-md p-4 rounded-xl shadow-lg max-w-xs w-full opacity-0 hidden sm:block">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="text-lg font-bold text-white flex items-center"><i class="ph-fill ph-radio-tower text-green-400 mr-2"></i> Canlı Veri</h3>
+            <p class="text-sm text-gray-300"><span id="online-users-count">0</span> Çevrimiçi</p>
+        </div>
+        <ul id="live-events" class="text-sm space-y-2 text-gray-300 h-24 overflow-y-hidden">
+            <!-- Canlı olaylar buraya eklenecek -->
+        </ul>
+    </div>
+
 
     <div class="container mx-auto p-4 md:p-8">
 
@@ -89,26 +111,10 @@
             <p class="text-xl text-gray-300 max-w-3xl mx-auto">Engelsiz kentler için teknolojiyi adımlarınıza taşıyoruz.</p>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 max-w-6xl mx-auto">
-                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
-                    <i class="ph-bold ph-person-simple-walk text-5xl text-red-500 mx-auto mb-4"></i>
-                    <h3 class="text-lg font-bold text-white">Problem</h3>
-                    <p class="text-sm text-gray-400 mt-1">Kentlerdeki fiziksel engeller ve yönlendirme eksikliği.</p>
-                </div>
-                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
-                    <i class="ph-bold ph-cpu text-5xl text-blue-500 mx-auto mb-4"></i>
-                    <h3 class="text-lg font-bold text-white">Teknoloji</h3>
-                    <p class="text-sm text-gray-400 mt-1">Ultrasonik ve renk sensörleri ile donatılmış akıllı sistem.</p>
-                </div>
-                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
-                    <i class="ph-bold ph-shoe text-5xl text-green-500 mx-auto mb-4"></i>
-                    <h3 class="text-lg font-bold text-white">Çözüm</h3>
-                    <p class="text-sm text-gray-400 mt-1">Titreşim ve sesli uyarılar üreten giyilebilir akıllı ayakkabı.</p>
-                </div>
-                <div class="info-card rounded-xl p-6 text-center card-hover-effect">
-                    <i class="ph-bold ph-shield-check text-5xl text-yellow-500 mx-auto mb-4"></i>
-                    <h3 class="text-lg font-bold text-white">Etki</h3>
-                    <p class="text-sm text-gray-400 mt-1">Güvenli, bağımsız hareket ve artan toplumsal katılım.</p>
-                </div>
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect"><i class="ph-bold ph-person-simple-walk text-5xl text-red-500 mx-auto mb-4"></i><h3 class="text-lg font-bold text-white">Problem</h3><p class="text-sm text-gray-400 mt-1">Kentlerdeki fiziksel engeller ve yönlendirme eksikliği.</p></div>
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect"><i class="ph-bold ph-cpu text-5xl text-blue-500 mx-auto mb-4"></i><h3 class="text-lg font-bold text-white">Teknoloji</h3><p class="text-sm text-gray-400 mt-1">Ultrasonik ve renk sensörleri ile donatılmış akıllı sistem.</p></div>
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect"><i class="ph-bold ph-shoe text-5xl text-green-500 mx-auto mb-4"></i><h3 class="text-lg font-bold text-white">Çözüm</h3><p class="text-sm text-gray-400 mt-1">Titreşim ve sesli uyarılar üreten giyilebilir akıllı ayakkabı.</p></div>
+                <div class="info-card rounded-xl p-6 text-center card-hover-effect"><i class="ph-bold ph-shield-check text-5xl text-yellow-500 mx-auto mb-4"></i><h3 class="text-lg font-bold text-white">Etki</h3><p class="text-sm text-gray-400 mt-1">Güvenli, bağımsız hareket ve artan toplumsal katılım.</p></div>
             </div>
             
             <div class="mt-16">
@@ -123,34 +129,10 @@
             <section id="stats-section" aria-labelledby="stats-heading">
                 <h2 id="stats-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">Canlı İstatistik Paneli</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div class="info-card rounded-xl p-6 flex items-center gap-4">
-                        <i class="ph-bold ph-qr-code text-4xl text-green-400"></i>
-                        <div>
-                            <p class="text-sm text-gray-400">Toplam Tarama</p>
-                            <p class="text-3xl font-bold text-white" id="total-scans">0</p>
-                        </div>
-                    </div>
-                    <div class="info-card rounded-xl p-6 flex items-center gap-4">
-                        <i class="ph-bold ph-users text-4xl text-indigo-400"></i>
-                        <div>
-                            <p class="text-sm text-gray-400">Toplam Ziyaretçi</p>
-                            <p class="text-3xl font-bold text-white" id="total-visitors">0</p>
-                        </div>
-                    </div>
-                    <div class="info-card rounded-xl p-6 flex items-center gap-4">
-                        <i class="ph-bold ph-map-pin text-4xl text-red-400"></i>
-                        <div>
-                            <p class="text-sm text-gray-400">Tespit Edilen Konum</p>
-                            <p class="text-xl font-bold text-white" id="location-info">İzin bekleniyor...</p>
-                        </div>
-                    </div>
-                     <div class="info-card rounded-xl p-6 flex items-center gap-4">
-                        <i class="ph-bold ph-trophy text-4xl text-yellow-400"></i>
-                        <div>
-                            <p class="text-sm text-gray-400">En Popüler Kod</p>
-                            <p class="text-2xl font-bold text-white">Park Alanı</p>
-                        </div>
-                    </div>
+                    <div class="info-card rounded-xl p-6 flex items-center gap-4"><i class="ph-bold ph-qr-code text-4xl text-green-400"></i><div><p class="text-sm text-gray-400">Toplam Tarama</p><p class="text-3xl font-bold text-white" id="total-scans">0</p></div></div>
+                    <div class="info-card rounded-xl p-6 flex items-center gap-4"><i class="ph-bold ph-users text-4xl text-indigo-400"></i><div><p class="text-sm text-gray-400">Toplam Ziyaretçi</p><p class="text-3xl font-bold text-white" id="total-visitors">0</p></div></div>
+                    <div class="info-card rounded-xl p-6 flex items-center gap-4"><i class="ph-bold ph-map-pin text-4xl text-red-400"></i><div><p class="text-sm text-gray-400">Tespit Edilen Konum</p><p class="text-xl font-bold text-white" id="location-info">İzin bekleniyor...</p></div></div>
+                    <div class="info-card rounded-xl p-6 flex items-center gap-4"><i class="ph-bold ph-trophy text-4xl text-yellow-400"></i><div><p class="text-sm text-gray-400">En Popüler Kod</p><p class="text-2xl font-bold text-white">Park Alanı</p></div></div>
                 </div>
                  <div class="info-card rounded-xl p-6 mt-6">
                     <h3 class="text-lg font-semibold mb-4">Haftalık Tarama Trendi</h3>
@@ -198,16 +180,7 @@
             <section id="map-section" aria-labelledby="map-heading">
                 <h2 id="map-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">İşlev Alanları Haritası</h2>
                 <div class="info-card rounded-xl p-2 shadow-lg h-96">
-                    <iframe 
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d192597.2943615963!2d28.8473703463382!3d41.04832386241019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1ccfe98bc01b0d0!2s%C4%B0stanbul!5e0!3m2!1str!2str!4v1720000000000!5m2!1str!2str" 
-                        width="100%" 
-                        height="100%" 
-                        style="border:0;" 
-                        allowfullscreen="" 
-                        loading="lazy" 
-                        referrerpolicy="no-referrer-when-downgrade"
-                        title="İşlev Alanları Haritası">
-                    </iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d192597.2943615963!2d28.8473703463382!3d41.04832386241019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1ccfe98bc01b0d0!2s%C4%B0stanbul!5e0!3m2!1str!2str!4v1720000000000!5m2!1str!2str" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="İşlev Alanları Haritası"></iframe>
                 </div>
             </section>
 
@@ -229,9 +202,7 @@
                             <h3 class="text-2xl font-bold mb-4">QR Kodu Tara veya Yükle</h3>
                             <div class="flex justify-center gap-4 mb-4">
                                 <button id="start-qr-camera-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Kamerayı Aç</button>
-                                <label for="qr-file-input" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer">
-                                    Dosya Yükle
-                                </label>
+                                <label for="qr-file-input" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg cursor-pointer">Dosya Yükle</label>
                                 <input type="file" id="qr-file-input" class="hidden" accept="image/*">
                             </div>
                             <div class="mt-4 p-4 bg-gray-900/50 rounded-lg min-h-[6rem]">
@@ -295,6 +266,7 @@
             initCameraColorPicker(); 
             initQrScanner();
             initStatsDashboard();
+            initLiveStats();
         });
 
         function initWelcomeModal() {
@@ -402,6 +374,7 @@
             if (!konteyner) return;
             konteyner.innerHTML = ''; 
             const audioPlayer = new Audio();
+            let leaveTimeout;
 
             islevKartlari.forEach(kart => {
                 const islevKarti = document.createElement('div');
@@ -420,15 +393,22 @@
                 `;
                 
                 islevKarti.addEventListener('mouseenter', () => {
+                    clearTimeout(leaveTimeout);
                     if (audioPlayer.src !== kart.sesURL) {
                         audioPlayer.src = kart.sesURL;
                     }
-                    audioPlayer.play().catch(e => console.error("Kart sesi çalınamadı:", e));
+                    if (audioPlayer.paused) {
+                       audioPlayer.play().catch(e => {
+                           if (e.name !== 'AbortError') console.error("Kart sesi çalınamadı:", e);
+                       });
+                    }
                 });
 
                 islevKarti.addEventListener('mouseleave', () => {
-                    audioPlayer.pause();
-                    audioPlayer.currentTime = 0;
+                    leaveTimeout = setTimeout(() => {
+                        audioPlayer.pause();
+                        audioPlayer.currentTime = 0;
+                    }, 50);
                 });
 
                 konteyner.appendChild(islevKarti);
@@ -436,7 +416,7 @@
         }
 
         function initCameraColorPicker() {
-             const video = document.getElementById('camera-feed');
+            const video = document.getElementById('camera-feed');
             const canvas = document.getElementById('snapshot-canvas');
             const colorPreview = document.getElementById('color-preview');
             const colorValue = document.getElementById('color-value');
@@ -455,7 +435,6 @@
 
             const findClosestColor = (r, g, b) => {
                 let closestMatch = { color: null, distance: Infinity };
-
                 for (const color of renkEslesmeleri) {
                     const distance = Math.sqrt(Math.pow(r - color.r, 2) + Math.pow(g - color.g, 2) + Math.pow(b - color.b, 2));
                     if (distance < closestMatch.distance) {
@@ -463,64 +442,39 @@
                         closestMatch.color = color;
                     }
                 }
-                const threshold = 200; 
+                const threshold = 190; 
                 return closestMatch.distance < threshold ? closestMatch : { color: null, distance: Infinity };
             };
 
             const processFrame = () => {
                 if (!video.srcObject || video.paused || video.ended || !stream || !stream.active) return;
-
                 const context = canvas.getContext('2d', { willReadFrequently: true });
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
+                canvas.width = video.videoWidth; canvas.height = video.videoHeight;
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-                const centerX = Math.floor(canvas.width / 2);
-                const centerY = Math.floor(canvas.height / 2);
-                
+                const centerX = Math.floor(canvas.width / 2), centerY = Math.floor(canvas.height / 2);
                 const sampleSize = 10;
                 const imageData = context.getImageData(centerX - (sampleSize/2), centerY - (sampleSize/2), sampleSize, sampleSize).data;
-                
                 let r_avg = 0, g_avg = 0, b_avg = 0;
-                for (let i = 0; i < imageData.length; i += 4) {
-                    r_avg += imageData[i];
-                    g_avg += imageData[i+1];
-                    b_avg += imageData[i+2];
-                }
+                for (let i = 0; i < imageData.length; i += 4) { r_avg += imageData[i]; g_avg += imageData[i+1]; b_avg += imageData[i+2]; }
                 const pixelCount = imageData.length / 4;
-                const r = Math.floor(r_avg / pixelCount);
-                const g = Math.floor(g_avg / pixelCount);
-                const b = Math.floor(b_avg / pixelCount);
-
+                const r = Math.floor(r_avg / pixelCount), g = Math.floor(g_avg / pixelCount), b = Math.floor(b_avg / pixelCount);
                 const toHex = (c) => ('0' + c.toString(16)).slice(-2);
                 const hexColor = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-
                 colorPreview.style.backgroundColor = hexColor;
                 colorValue.textContent = hexColor.toUpperCase();
 
                 const { color: matchedColor, distance } = findClosestColor(r, g, b);
-
                 if (matchedColor) {
-                    const percentage = Math.round(Math.max(0, (1 - (distance / 200)) * 100));
+                    const percentage = Math.round(Math.max(0, (1 - (distance / 190)) * 100));
                     matchedColorPreview.style.backgroundColor = matchedColor.hex;
                     matchedColorName.textContent = matchedColor.name;
                     matchedColorIcon.className = `ph ${matchedColor.icon} text-4xl text-black`;
                     matchedColorPercentage.textContent = `Benzerlik: %${percentage}`;
-                    
                     if (lastMatchedColorName !== matchedColor.name) {
                         lastMatchedColorName = matchedColor.name;
-                        
-                        if (!matchAudio.paused) {
-                            matchAudio.pause();
-                            matchAudio.currentTime = 0;
-                        }
-                        
+                        if (!matchAudio.paused) { matchAudio.pause(); matchAudio.currentTime = 0; }
                         matchAudio.src = matchedColor.sesURL;
-                        matchAudio.play().catch(e => {
-                            if (e.name !== 'AbortError') {
-                                console.error("Renk eşleşme sesi oynatılamadı:", e);
-                            }
-                        });
+                        matchAudio.play().catch(e => { if (e.name !== 'AbortError') console.error("Renk sesi oynatılamadı:", e); });
                     }
                 } else {
                     matchedColorPreview.style.backgroundColor = '#000';
@@ -547,7 +501,7 @@
                     };
                 } catch (err) {
                     console.error("Kamera erişim hatası:", err);
-                    errorMsg.textContent = 'Kamera başlatılamadı. Lütfen tarayıcı izinlerini kontrol edin.';
+                    errorMsg.textContent = 'Kamera başlatılamadı.';
                     errorMsg.classList.remove('hidden');
                     startBtn.textContent = 'Tekrar Dene';
                 }
@@ -556,14 +510,11 @@
             const stopCamera = () => {
                 if (stream) { stream.getTracks().forEach(track => track.stop()); }
                 if (intervalId) { clearInterval(intervalId); }
-                video.srcObject = null;
-                stream = null;
-                intervalId = null;
+                video.srcObject = null; stream = null; intervalId = null;
                 startBtn.textContent = 'Kamerayı Başlat';
                 startBtn.classList.replace('bg-red-600', 'bg-green-600');
                 startBtn.classList.replace('hover:bg-red-700', 'hover:bg-green-700');
                 crosshair.style.display = 'none';
-                
                 colorPreview.style.backgroundColor = '#000';
                 colorValue.textContent = '#000000';
                 matchedColorPreview.style.backgroundColor = '#000';
@@ -575,11 +526,7 @@
             };
 
             startBtn.addEventListener('click', () => {
-                if (stream && stream.active) {
-                    stopCamera();
-                } else {
-                    startCamera();
-                }
+                if (stream && stream.active) { stopCamera(); } else { startCamera(); }
             });
         }
 
@@ -591,34 +538,24 @@
             const fileInput = document.getElementById('qr-file-input');
             const errorMsg = document.getElementById('qr-camera-error');
             const line = document.getElementById('qr-line');
-
             let stream = null;
             let animationFrameId = null;
 
             function tick() {
                 if (video.readyState === video.HAVE_ENOUGH_DATA) {
-                    canvas.height = video.videoHeight;
-                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight; canvas.width = video.videoWidth;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
                     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const code = jsQR(imageData.data, imageData.width, imageData.height, {
-                        inversionAttempts: "dontInvert",
-                    });
-
-                    if (code) {
-                        resultEl.textContent = code.data;
-                        stopCamera();
-                    }
+                    const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
+                    if (code) { resultEl.textContent = code.data; stopCamera(); }
                 }
-                if (stream && stream.active) {
-                   animationFrameId = requestAnimationFrame(tick);
-                }
+                if (stream && stream.active) { animationFrameId = requestAnimationFrame(tick); }
             }
             
             async function startCamera() {
                 try {
-                     if (stream) { stream.getTracks().forEach(track => track.stop()); }
+                    if (stream) { stream.getTracks().forEach(track => track.stop()); }
                     errorMsg.classList.add('hidden');
                     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                     video.srcObject = stream;
@@ -627,28 +564,20 @@
                     animationFrameId = requestAnimationFrame(tick);
                 } catch(e) {
                     errorMsg.textContent = "Kamera başlatılamadı.";
-                    errorMsg.classList.remove('hidden');
-                    console.error(e);
+                    errorMsg.classList.remove('hidden'); console.error(e);
                 }
             }
 
             function stopCamera() {
                 if (animationFrameId) cancelAnimationFrame(animationFrameId);
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                }
-                video.srcObject = null;
-                stream = null;
+                if (stream) { stream.getTracks().forEach(track => track.stop()); }
+                video.srcObject = null; stream = null;
                 line.style.display = 'none';
                 startBtn.textContent = "Kamerayı Aç";
             }
 
             startBtn.addEventListener('click', () => {
-                if (stream && stream.active) {
-                    stopCamera();
-                } else {
-                    startCamera();
-                }
+                if (stream && stream.active) { stopCamera(); } else { startCamera(); }
             });
 
             fileInput.addEventListener('change', e => {
@@ -659,21 +588,60 @@
                     const img = new Image();
                     img.onload = () => {
                         const ctx = canvas.getContext('2d');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
+                        canvas.width = img.width; canvas.height = img.height;
                         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                         const code = jsQR(imageData.data, imageData.width, imageData.height);
-                        if(code) {
-                            resultEl.textContent = code.data;
-                        } else {
-                            resultEl.textContent = "QR Kod bulunamadı.";
-                        }
+                        resultEl.textContent = code ? code.data : "QR Kod bulunamadı.";
                     };
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
             });
+        }
+
+        function initLiveStats() {
+            const statsPanel = document.getElementById('live-stats');
+            const usersCountEl = document.getElementById('online-users-count');
+            const eventsListEl = document.getElementById('live-events');
+            if (!statsPanel || !usersCountEl || !eventsListEl) return;
+
+            statsPanel.style.display = 'block';
+            setTimeout(() => statsPanel.classList.remove('opacity-0'), 100);
+
+
+            let userCount = Math.floor(Math.random() * (150 - 80 + 1)) + 80;
+            let userCity = "Türkiye"; // Varsayılan konum
+            const fallbackCities = ["İstanbul", "Ankara", "İzmir", "Bursa", "Antalya"];
+            
+            // Gerçek konumu almayı dene
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const { latitude, longitude } = position.coords;
+                    fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=tr`)
+                        .then(res => res.json()).then(data => { userCity = data.city || userCity; });
+                });
+            }
+
+            setInterval(() => {
+                userCount += Math.floor(Math.random() * 5) - 2;
+                if (userCount < 50) userCount = 50;
+                usersCountEl.textContent = userCount;
+
+                const randomAction = renkEslesmeleri[Math.floor(Math.random() * renkEslesmeleri.length)];
+                // %50 ihtimalle kullanıcının kendi şehrini, %50 ihtimalle rastgele bir şehri göster
+                const location = Math.random() < 0.5 ? userCity : fallbackCities[Math.floor(Math.random() * fallbackCities.length)];
+                
+                const newEvent = document.createElement('li');
+                newEvent.className = "flex items-center";
+                newEvent.innerHTML = `<i class="ph-fill ${randomAction.icon} mr-2" style="color:${randomAction.hex};"></i> Bir kullanıcı <strong>${location}</strong>'dan ${randomAction.name} rengini taradı.`;
+
+                eventsListEl.prepend(newEvent);
+                if (eventsListEl.children.length > 4) {
+                    eventsListEl.lastChild.remove();
+                }
+
+            }, 4500);
         }
 
     </script>
