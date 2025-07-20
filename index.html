@@ -12,6 +12,9 @@
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <!-- QR Kod Okuyucu Kütüphanesi -->
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <!-- Leaflet Harita Kütüphanesi -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <style>
         body {
@@ -195,13 +198,13 @@
             <section id="map-section" aria-labelledby="map-heading">
                 <h2 id="map-heading" class="text-3xl font-bold mb-8 border-l-4 border-red-500 pl-4">İşlev Alanları Haritası</h2>
                 <div class="info-card rounded-xl p-2 shadow-lg h-96 mb-4">
-                    <iframe id="google-map-iframe" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d192597.2943615963!2d28.8473703463382!3d41.04832386241019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14caa7040068086b%3A0xe1ccfe98bc01b0d0!2s%C4%B0stanbul!5e0!3m2!1str!2str!4v1720000000000!5m2!1str!2str" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="İşlev Alanları Haritası"></iframe>
+                    <div id="leaflet-map" class="w-full h-full rounded-xl"></div>
                 </div>
                 <div class="info-card rounded-xl p-6">
                     <div class="flex justify-between items-center mb-4">
                          <h3 class="text-xl font-bold text-white">Yapay Zeka Destekli Çevre Analizi</h3>
-                         <button id="speak-location-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2" disabled>
-                            <i class="ph-bold ph-speaker-high"></i> Konumu Seslendir
+                         <button id="speak-analysis-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg flex items-center gap-2" disabled>
+                            <i class="ph-bold ph-speaker-high"></i> Analizi Seslendir
                         </button>
                     </div>
                     <div id="gemini-analysis-container">
@@ -310,6 +313,10 @@
             { name: "Ticari Alan", hex: "#FFFF00", r: 255, g: 255, b: 0, icon: "ph-shopping-cart-simple", sesURL: "https://sev84.github.io/Holo-vision-Demo/Ticari%20Alan.mp3" },
             { name: "Otobüs Durağı", hex: "#008000", r: 0, g: 128, b: 0, icon: "ph-bus", sesURL: "https://sev84.github.io/Holo-vision-Demo/Otob%C3%BCs%20Dura%C4%9F%C4%B1.mp3" }
         ];
+        
+        // Global API anahtar değişkenleri
+        let GEMINI_API_KEY = "";
+        let ELEVENLABS_API_KEY = "";
 
         document.addEventListener('DOMContentLoaded', () => {
             initApiManagement();
@@ -321,9 +328,6 @@
             initStatsDashboard();
             initLiveStats();
         });
-
-        let GEMINI_API_KEY = "";
-        let ELEVENLABS_API_KEY = "";
 
         function initApiManagement() {
             const geminiInput = document.getElementById('gemini-api-key');
@@ -395,10 +399,10 @@
             const totalVisitorsEl = document.getElementById('total-visitors');
             const lastUpdatedEl = document.getElementById('last-updated');
             const locationInfoEl = document.getElementById('location-info');
-            const mapIframe = document.getElementById('google-map-iframe');
-            const speakLocationBtn = document.getElementById('speak-location-btn');
+            const speakAnalysisBtn = document.getElementById('speak-analysis-btn');
             const geminiLoading = document.getElementById('gemini-loading');
             const geminiResult = document.getElementById('gemini-result');
+            let map;
 
             let scanCount = 1482;
             let visitorCount = 312;
@@ -411,7 +415,13 @@
                 navigator.geolocation.getCurrentPosition(async position => {
                     const { latitude, longitude } = position.coords;
                     
-                    mapIframe.src = `https://maps.google.com/maps?q=${latitude},${longitude}&hl=tr&z=15&output=embed`;
+                    if (map) { map.remove(); }
+                    map = L.map('leaflet-map').setView([latitude, longitude], 16);
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(map);
+                    L.marker([latitude, longitude]).addTo(map).bindPopup('Buradasınız.').openPopup();
+
 
                     const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=tr`);
                     const data = await response.json();
@@ -419,12 +429,16 @@
                     locationInfoEl.textContent = locationText;
 
                     speak(`Konumunuz bulundu: ${locationText}`);
-                    speakLocationBtn.disabled = false;
-                    speakLocationBtn.onclick = () => speak(`Konumunuz: ${locationText}`);
-
+                    
                     geminiLoading.classList.remove('hidden');
                     geminiResult.textContent = '';
-                    await getGeminiAnalysis(latitude, longitude);
+                    const analysisText = await getGeminiAnalysis(latitude, longitude);
+
+                    if(analysisText) {
+                        speakAnalysisBtn.disabled = false;
+                        speakAnalysisBtn.onclick = () => speak(analysisText);
+                    }
+
 
                 }, () => {
                     locationInfoEl.textContent = "İzin verilmedi";
@@ -487,6 +501,8 @@
                     result.candidates[0].content.parts.length > 0) {
                     const text = result.candidates[0].content.parts[0].text;
                     geminiResult.innerHTML = text.replace(/\n/g, '<br>');
+                    speak(text); // Analizi seslendir
+                    return text; // Seslendirme butonu için metni döndür
                 } else {
                     geminiResult.textContent = "Analiz sonucu alınamadı, lütfen API anahtarınızı kontrol edin.";
                 }
@@ -497,6 +513,7 @@
             } finally {
                 geminiLoading.classList.add('hidden');
             }
+            return null;
         }
 
         async function speak(text) {
@@ -524,6 +541,7 @@
 
         function speakWithBrowser(text) {
             if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Önceki konuşmayı iptal et
                 const utterance = new SpeechSynthesisUtterance(text);
                 utterance.lang = 'tr-TR';
                 window.speechSynthesis.speak(utterance);
